@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="color-scheme" content="light dark">
+<title>A very encouraging frog</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #EAE5FB;
+    --text: #3A2E66;
+    --hint: #7C71A8;
+    box-sizing: border-box;
+    padding-top: env(safe-area-inset-top, 0px);
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #1B1730;
+      --text: #ECE7FF;
+      --hint: #A49BCB;
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #1B1730;
+    --text: #ECE7FF;
+    --hint: #A49BCB;
+  }
+  html {
+    height: 100%;
+    scroll-padding-top: env(safe-area-inset-top, 0px);
+  }
+  *, *::before, *::after { box-sizing: border-box; }
+  body {
+    margin: 0;
+    height: 100%;
+    background: var(--bg);
+    color: var(--text);
+    font-family: "Fredoka", "Nunito", ui-rounded, "Trebuchet MS", system-ui, sans-serif;
+  }
+
+  .scene {
+    min-height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 1.25rem;
+    padding: 7rem 1.25rem 3rem;
+  }
+
+  .frog-btn {
+    width: min(82vw, 400px);
+    padding: 0;
+    border: 0;
+    background: none;
+    cursor: pointer;
+    touch-action: manipulation;
+    -webkit-tap-highlight-color: transparent;
+    user-select: none;
+    -webkit-user-select: none;
+    border-radius: 28px;
+  }
+  .frog-btn:focus-visible {
+    outline: 3px solid var(--text);
+    outline-offset: 8px;
+  }
+  .frog-btn svg {
+    display: block;
+    width: 100%;
+    height: auto;
+    overflow: visible;
+    transition: transform .2s ease;
+  }
+  @media (hover: hover) {
+    .frog-btn:hover svg { transform: scale(1.025); }
+  }
+  .frog-btn:active svg { transform: scale(.98); }
+
+  .message {
+    margin: 0;
+    max-width: 22em;
+    min-height: 4.1em;
+    text-align: center;
+    text-wrap: balance;
+    font-weight: 500;
+    font-size: clamp(1.25rem, 4.6vw, 1.75rem);
+    line-height: 1.35;
+  }
+  .message.hint { color: var(--hint); }
+  .message.show { animation: pop-in .45s cubic-bezier(.2, .9, .3, 1.2); }
+  @keyframes pop-in {
+    from { opacity: 0; transform: translateY(10px) scale(.96); }
+    to   { opacity: 1; transform: none; }
+  }
+  @keyframes fade-in { from { opacity: 0; } to { opacity: 1; } }
+
+  /* ---------- frog parts ---------- */
+  .frog-body { transform-origin: 160px 250px; }
+  .shadow    { transform-origin: 160px 252px; }
+
+  .eye { opacity: 1; }
+  .happy-eye { opacity: 0; }
+  .lid { transform: scaleY(0); animation: blink 5s infinite; }
+  @keyframes blink {
+    0%, 90%, 100% { transform: scaleY(0); }
+    94% { transform: scaleY(1); }
+  }
+
+  .tongue { transform: scaleY(0); transform-origin: 0 0; }
+  .fly { opacity: 0; transform-box: fill-box; transform-origin: center; }
+  .wing { transform-box: fill-box; transform-origin: 50% 100%; }
+
+  /* ---------- 1. hop ---------- */
+  .is-hop .frog-body { animation: hop .95s both; }
+  .is-hop .shadow { animation: hop-shadow .95s both; }
+  .is-hop .happy-eye, .is-flip .happy-eye { opacity: 1; }
+  .is-hop .eye, .is-flip .eye { opacity: 0; }
+
+  @keyframes hop {
+    0%   { transform: translateY(0) scale(1, 1);        animation-timing-function: ease-in-out; }
+    18%  { transform: translateY(0) scale(1.12, .82);   animation-timing-function: cubic-bezier(.2, .8, .3, 1); }
+    45%  { transform: translateY(-95px) scale(.92, 1.14); animation-timing-function: cubic-bezier(.6, 0, .9, .5); }
+    72%  { transform: translateY(0) scale(1.14, .8);    animation-timing-function: ease-out; }
+    86%  { transform: translateY(-14px) scale(.98, 1.03); animation-timing-function: ease-in; }
+    100% { transform: translateY(0) scale(1, 1); }
+  }
+  @keyframes hop-shadow {
+    0%, 100% { transform: scale(1); opacity: .28; }
+    18%      { transform: scale(1.06); opacity: .32; }
+    45%      { transform: scale(.62); opacity: .14; }
+    72%      { transform: scale(1.08); opacity: .32; }
+    86%      { transform: scale(.9); opacity: .24; }
+  }
+
+  /* ---------- 2. backflip ---------- */
+  .is-flip .frog-body { transform-origin: 160px 165px; animation: flip 1.15s both; }
+  .is-flip .shadow { animation: flip-shadow 1.15s both; }
+
+  @keyframes flip {
+    0%   { transform: translateY(0) rotate(0deg) scale(1, 1);           animation-timing-function: ease-in-out; }
+    16%  { transform: translateY(8px) rotate(0deg) scale(1.1, .86);      animation-timing-function: cubic-bezier(.2, .8, .4, 1); }
+    50%  { transform: translateY(-130px) rotate(-180deg) scale(1, 1);    animation-timing-function: cubic-bezier(.6, 0, .9, .5); }
+    82%  { transform: translateY(8px) rotate(-360deg) scale(1.12, .84);  animation-timing-function: ease-out; }
+    100% { transform: translateY(0) rotate(-360deg) scale(1, 1); }
+  }
+  @keyframes flip-shadow {
+    0%, 100% { transform: scale(1); opacity: .28; }
+    16%      { transform: scale(1.06); opacity: .32; }
+    50%      { transform: scale(.5); opacity: .1; }
+    82%      { transform: scale(1.1); opacity: .32; }
+  }
+
+  /* ---------- 3. catch a firefly ---------- */
+  .is-catch .frog-body { animation: catch-body 1.8s both; }
+  .is-catch .tongue { animation: tongue-shot 1.8s both; }
+  .is-catch .fly { animation: fly-path 1.8s both; }
+  .is-catch .wing { animation: flap .09s linear infinite alternate; }
+  .is-catch .eye { animation: eyes-open 1.8s linear both; }
+  .is-catch .happy-eye { animation: eyes-happy 1.8s linear both; }
+
+  @keyframes catch-body {
+    0%   { transform: translateY(0) scale(1, 1); }
+    10%  { transform: translateY(0) scale(1.05, .94); }
+    22%  { transform: translateY(0) scale(.97, 1.04); }
+    44%  { transform: translateY(0) scale(.97, 1.04); }
+    55%  { transform: translateY(0) scale(1, 1); }
+    62%  { transform: translateY(0) scale(1.12, .88); }
+    72%  { transform: translateY(-12px) scale(.96, 1.07); }
+    84%  { transform: translateY(0) scale(1.05, .95); }
+    100% { transform: translateY(0) scale(1, 1); }
+  }
+  @keyframes tongue-shot {
+    0%, 20% { transform: scaleY(0); animation-timing-function: cubic-bezier(.2, .9, .3, 1); }
+    30%     { transform: scaleY(1); }
+    44%     { transform: scaleY(1); animation-timing-function: ease-in; }
+    57%, 100% { transform: scaleY(0); }
+  }
+  @keyframes fly-path {
+    0%   { opacity: 0; transform: translate(0, -8px) scale(.6); }
+    7%   { opacity: 1; transform: translate(0, 0) scale(1); }
+    13%  { transform: translate(7px, -5px) scale(1); }
+    19%  { transform: translate(-7px, 2px) scale(1); }
+    25%  { transform: translate(3px, -3px) scale(1); }
+    30%  { opacity: 1; transform: translate(0, 0) scale(1); }
+    44%  { opacity: 1; transform: translate(0, 0) scale(1); animation-timing-function: ease-in; }
+    57%  { opacity: 1; transform: translate(0, 118px) scale(.3); }
+    58%, 100% { opacity: 0; transform: translate(0, 118px) scale(.3); }
+  }
+  @keyframes flap {
+    from { transform: scaleY(1); }
+    to   { transform: scaleY(.3); }
+  }
+  @keyframes eyes-open {
+    0%, 52% { opacity: 1; }
+    53%, 92% { opacity: 0; }
+    93%, 100% { opacity: 1; }
+  }
+  @keyframes eyes-happy {
+    0%, 52% { opacity: 0; }
+    53%, 92% { opacity: 1; }
+    93%, 100% { opacity: 0; }
+  }
+
+  /* ---------- reduced motion ---------- */
+  @keyframes soft-pop {
+    0%, 100% { transform: scale(1); }
+    40% { transform: scale(1.04); }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .lid { animation: none; }
+    .frog-btn svg { transition: none; }
+    .is-hop .frog-body, .is-flip .frog-body, .is-catch .frog-body {
+      transform-origin: 160px 250px;
+      animation: soft-pop .5s ease-out both;
+    }
+    .is-hop .shadow, .is-flip .shadow { animation: none; }
+    .is-catch .tongue, .is-catch .fly, .is-catch .wing { animation: none; }
+    .is-catch .eye { animation: none; opacity: 0; }
+    .is-catch .happy-eye { animation: none; opacity: 1; }
+    .message.show { animation: fade-in .3s ease-out; }
+  }
+</style>
+</head>
+<body>
+<main class="scene">
+  <button class="frog-btn" id="frog" type="button" aria-label="Cute frog. Click it for a motivational message.">
+    <svg id="stage" viewBox="0 0 320 284" aria-hidden="true" focusable="false">
+      <!-- lily pad -->
+      <ellipse cx="160" cy="254" rx="132" ry="24" fill="#4FAE68"/>
+      <ellipse cx="160" cy="252" rx="100" ry="15" fill="#67C27D" opacity=".55"/>
+      <ellipse class="shadow" cx="160" cy="252" rx="94" ry="10" fill="#0F3D28" opacity=".28"/>
+
+      <g class="frog-body">
+        <!-- back legs -->
+        <ellipse cx="70" cy="206" rx="36" ry="30" fill="#5FB35A" transform="rotate(-18 70 206)"/>
+        <ellipse cx="250" cy="206" rx="36" ry="30" fill="#5FB35A" transform="rotate(18 250 206)"/>
+        <ellipse cx="50" cy="240" rx="30" ry="11" fill="#5FB35A"/>
+        <ellipse cx="270" cy="240" rx="30" ry="11" fill="#5FB35A"/>
+
+        <!-- body and eye bumps -->
+        <ellipse cx="160" cy="170" rx="102" ry="80" fill="#7BC96F"/>
+        <circle cx="100" cy="100" r="34" fill="#7BC96F"/>
+        <circle cx="220" cy="100" r="34" fill="#7BC96F"/>
+        <ellipse cx="160" cy="205" rx="62" ry="42" fill="#DFF7C2"/>
+        <ellipse cx="116" cy="246" rx="25" ry="10" fill="#5FB35A"/>
+        <ellipse cx="204" cy="246" rx="25" ry="10" fill="#5FB35A"/>
+
+        <!-- spots -->
+        <circle cx="120" cy="132" r="6" fill="#63B35C"/>
+        <circle cx="204" cy="128" r="5" fill="#63B35C"/>
+        <circle cx="100" cy="188" r="7" fill="#63B35C"/>
+        <circle cx="222" cy="182" r="6" fill="#63B35C"/>
+
+        <!-- cheeks -->
+        <circle cx="84" cy="152" r="14" fill="#FF9EB5" opacity=".75"/>
+        <circle cx="236" cy="152" r="14" fill="#FF9EB5" opacity=".75"/>
+
+        <!-- eyes -->
+        <g class="eye">
+          <circle cx="100" cy="98" r="24" fill="#fff"/>
+          <circle cx="102" cy="101" r="12" fill="#2B3A2E"/>
+          <circle cx="107" cy="96" r="4.5" fill="#fff"/>
+          <circle cx="98" cy="106" r="2" fill="#fff"/>
+          <circle class="lid" style="transform-origin:100px 74px" cx="100" cy="98" r="24.5" fill="#7BC96F"/>
+        </g>
+        <g class="eye">
+          <circle cx="220" cy="98" r="24" fill="#fff"/>
+          <circle cx="218" cy="101" r="12" fill="#2B3A2E"/>
+          <circle cx="223" cy="96" r="4.5" fill="#fff"/>
+          <circle cx="214" cy="106" r="2" fill="#fff"/>
+          <circle class="lid" style="transform-origin:220px 74px" cx="220" cy="98" r="24.5" fill="#7BC96F"/>
+        </g>
+        <g class="happy-eye" fill="none" stroke="#2B3A2E" stroke-width="6" stroke-linecap="round">
+          <path d="M78 104 Q100 80 122 104"/>
+          <path d="M198 104 Q220 80 242 104"/>
+        </g>
+
+        <!-- nostrils -->
+        <circle cx="149" cy="128" r="2.6" fill="#4C9A4A"/>
+        <circle cx="171" cy="128" r="2.6" fill="#4C9A4A"/>
+
+        <!-- tongue and firefly -->
+        <g transform="translate(160 160)">
+          <g class="tongue">
+            <rect x="-5" y="-118" width="10" height="118" rx="5" fill="#FF6F91"/>
+            <circle cx="0" cy="-118" r="8" fill="#FF6F91"/>
+          </g>
+        </g>
+        <g transform="translate(160 42)">
+          <g class="fly">
+            <circle r="10" fill="#F2B84B" opacity=".3"/>
+            <ellipse class="wing" cx="-6" cy="-4" rx="6" ry="3.2" fill="#fff" opacity=".9" transform="rotate(-25 -6 -4)"/>
+            <ellipse class="wing" cx="6" cy="-4" rx="6" ry="3.2" fill="#fff" opacity=".9" transform="rotate(25 6 -4)"/>
+            <circle r="4.5" fill="#F2B84B"/>
+          </g>
+        </g>
+
+        <!-- mouth -->
+        <path d="M128 148 Q160 176 192 148" fill="none" stroke="#2B3A2E" stroke-width="5" stroke-linecap="round"/>
+      </g>
+    </svg>
+  </button>
+
+  <p class="message hint" id="message" aria-live="polite">Tap the frog</p>
+</main>
+
+<script>
+(function () {
+  var MESSAGES = [
+    "You are doing better than you think.",
+    "Small hops still get you across the pond.",
+    "Today, one lily pad at a time is plenty.",
+    "You have survived every hard day so far. That's a perfect record.",
+    "Rest is part of the jump, not a step away from it.",
+    "Be kind to yourself. You're growing at your own pace.",
+    "Even tadpoles become frogs, so keep going.",
+    "Nobody leaps without crouching first, so a pause is fine.",
+    "Your effort counts even when nobody sees it.",
+    "It's okay to croak. Then try again.",
+    "You don't have to see the whole pond to take the next hop.",
+    "Mistakes are just splashes. The water always settles.",
+    "You've got more strength in those legs than you know.",
+    "Progress can be tiny and still be real.",
+    "Breathe in, breathe out, and hop on.",
+    "The best time to start was yesterday. The second best is right now.",
+    "Something good is hopping your way.",
+    "You're allowed to be proud of yourself today.",
+    "Not every day needs a big leap. A small one will do.",
+    "Keep your eyes up. Good things are buzzing nearby.",
+    "Your future self is cheering for you from the next lily pad.",
+    "Hard things get lighter once you begin them.",
+    "You belong here, exactly as you are.",
+    "Every expert was once a wobbly little tadpole.",
+    "Trust your legs. They know how to land.",
+    "Slow and steady still gets you across the water.",
+    "Today's mess is tomorrow's lesson, so keep going.",
+    "You're braver than you feel, and that's the good kind of brave.",
+    "Take the leap. The water is warmer than it looks.",
+    "Whatever today throws at you, you can hop right over it.",
+    "Be proud of how far you've come, not just how far is left.",
+    "You are enough, even on your croakiest days."
+  ];
+  var ANIMATIONS = ["hop", "flip", "catch"];
+
+  var btn = document.getElementById("frog");
+  var stage = document.getElementById("stage");
+  var body = stage.querySelector(".frog-body");
+  var msg = document.getElementById("message");
+
+  function makeBag(items) {
+    var bag = [];
+    var last = null;
+    function shuffle(a) {
+      for (var i = a.length - 1; i > 0; i--) {
+        var j = Math.floor(Math.random() * (i + 1));
+        var t = a[i]; a[i] = a[j]; a[j] = t;
+      }
+      return a;
+    }
+    return function next() {
+      if (!bag.length) {
+        bag = shuffle(items.slice());
+        if (bag.length > 1 && bag[bag.length - 1] === last) {
+          var t = bag[0]; bag[0] = bag[bag.length - 1]; bag[bag.length - 1] = t;
+        }
+      }
+      last = bag.pop();
+      return last;
+    };
+  }
+
+  var nextMessage = makeBag(MESSAGES);
+  var nextAnimation = makeBag(ANIMATIONS);
+  var classes = ANIMATIONS.map(function (n) { return "is-" + n; });
+
+  function play(name) {
+    stage.classList.remove.apply(stage.classList, classes);
+    void stage.getBoundingClientRect(); // restart the animation if clicked mid-way
+    stage.classList.add("is-" + name);
+  }
+
+  body.addEventListener("animationend", function (e) {
+    if (e.target !== body) return;
+    stage.classList.remove.apply(stage.classList, classes);
+  });
+
+  btn.addEventListener("click", function () {
+    play(nextAnimation());
+    msg.classList.remove("hint", "show");
+    void msg.offsetWidth;
+    msg.textContent = nextMessage();
+    msg.classList.add("show");
+  });
+})();
+</script>
+</body>
+</html>
